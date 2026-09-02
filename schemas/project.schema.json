@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/joeroche/anki-deck-builder/blob/main/schemas/project.schema.json",
+  "title": "Anki deck-builder project",
+  "type": "object",
+  "required": ["project_id", "title", "cards_file", "decks"],
+  "properties": {
+    "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+    "title": {"type": "string", "minLength": 1},
+    "cards_file": {"type": "string", "minLength": 1},
+    "profile_path": {"type": "string"},
+    "decks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["key", "path", "output", "expected_count"],
+        "properties": {
+          "key": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+          "path": {"type": "string", "minLength": 1},
+          "output": {"type": "string", "pattern": "\\.apkg$"},
+          "expected_count": {"type": "integer", "minimum": 0}
+        },
+        "additionalProperties": false
+      }
+    },
+    "installation": {
+      "type": "object",
+      "properties": {
+        "backup_before_changes": {"type": "boolean"},
+        "match_legacy_by_front_answer": {"type": "boolean"},
+        "remove_obsolete_decks": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

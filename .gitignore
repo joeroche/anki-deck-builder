@@ -1,0 +1,15 @@
+.DS_Store
+.pytest_cache/
+__pycache__/
+*.py[cod]
+.venv/
+build/
+dist/
+*.egg-info/
+
+# Generated packages and reports can contain private study material or paths.
+*.apkg
+projects/*/outputs/
+examples/*/outputs/
+examples/user/
+projects/*/project.local.yaml

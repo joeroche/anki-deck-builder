@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "anki-deck-builder"
+version = "2.0.0"
+description = "Manifest-driven, validated, safely installable Anki deck projects"
+requires-python = ">=3.11"
+dependencies = [
+  "genanki>=0.13",
+  "PyYAML>=6",
+]
+
+[project.scripts]
+anki-builder = "anki_builder.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["anki_builder*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

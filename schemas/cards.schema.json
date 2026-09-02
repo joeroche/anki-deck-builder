@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/joeroche/anki-deck-builder/blob/main/schemas/cards.schema.json",
+  "title": "Anki deck-builder cards",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "deck", "format"],
+    "properties": {
+      "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+      "deck": {"type": "string", "minLength": 1},
+      "format": {"enum": ["basic", "cloze", "typed", "image_occlusion"]},
+      "front": {"type": "string", "minLength": 1},
+      "answer": {"type": "string", "minLength": 1},
+      "text": {"type": "string", "minLength": 1},
+      "header": {"type": "string", "minLength": 1},
+      "image": {"type": "string", "minLength": 1},
+      "mask": {
+        "type": "object",
+        "required": ["x", "y", "width", "height"],
+        "properties": {
+          "x": {"type": "number", "minimum": 0, "maximum": 100},
+          "y": {"type": "number", "minimum": 0, "maximum": 100},
+          "width": {"type": "number", "exclusiveMinimum": 0, "maximum": 100},
+          "height": {"type": "number", "exclusiveMinimum": 0, "maximum": 100}
+        },
+        "additionalProperties": false
+      },
+      "tags": {"type": "array", "items": {"type": "string", "minLength": 1}},
+      "memory_target_id": {"type": "string", "minLength": 1},
+      "contrast_set_id": {"type": "string", "minLength": 1},
+      "contrast_role": {"type": "string", "minLength": 1},
+      "reinforcement_set_id": {"type": "string", "minLength": 1},
+      "bidirectional_set_id": {"type": "string", "minLength": 1},
+      "direction": {"enum": ["forward", "reverse"]}
+    },
+    "allOf": [
+      {
+        "if": {"properties": {"format": {"enum": ["basic", "typed"]}}},
+        "then": {"required": ["front", "answer"]}
+      },
+      {
+        "if": {"properties": {"format": {"const": "cloze"}}},
+        "then": {"required": ["text"]}
+      },
+      {
+        "if": {"properties": {"format": {"const": "image_occlusion"}}},
+        "then": {"required": ["header", "image", "mask", "answer"]}
+      }
+    ],
+    "additionalProperties": false
+  }
+}

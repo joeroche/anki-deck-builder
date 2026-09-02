@@ -1,0 +1,83 @@
+- id: initialization-symmetry
+  deck: main
+  format: basic
+  front: Identical starting weights preserve what relationship between neurons during training?
+  answer: They remain identical
+  tags: [alexnet, initialization]
+
+- id: random-initialization-purpose
+  deck: main
+  format: basic
+  front: What is the primary purpose of random weight initialization?
+  answer: Break parameter symmetry
+  tags: [alexnet, initialization]
+
+- id: positive-bias-relu
+  deck: main
+  format: basic
+  front: A positive bias pushes a ReLU toward which region?
+  answer: Active region
+  tags: [alexnet, relu]
+
+- id: lrn-fixed-coordinates
+  deck: main
+  format: basic
+  front: During AlexNet local response normalization, which coordinates stay fixed?
+  answer: Spatial coordinates
+  tags: [alexnet, lrn]
+
+- id: lrn-competing-dimension
+  deck: main
+  format: basic
+  front: In AlexNet local response normalization, the competing neighborhood spans which dimension?
+  answer: Channel dimension
+  tags: [alexnet, lrn]
+
+- id: training-crop-selection
+  deck: main
+  format: basic
+  front: Were AlexNet training crops random or fixed?
+  answer: Random
+  tags: [alexnet, augmentation]
+
+- id: ten-crop-stage
+  deck: main
+  format: basic
+  front: AlexNet's five fixed crops and their reflections were used at which stage?
+  answer: Evaluation
+  tags: [alexnet, evaluation]
+
+- id: excessive-learning-rate
+  deck: main
+  format: basic
+  front: What is the primary effect of an excessive learning rate?
+  answer: Unstable optimization
+  tags: [alexnet, optimization]
+
+- id: fine-tuning-reuse
+  deck: main
+  format: basic
+  front: What must fine-tuning reuse from pretraining?
+  answer: Pretrained weights
+  tags: [alexnet, transfer-learning]
+
+- id: momentum-velocity
+  deck: main
+  format: basic
+  front: What does momentum's velocity term store?
+  answer: A decaying history of prior updates
+  tags: [alexnet, optimization]
+
+- id: weight-decay-force
+  deck: main
+  format: basic
+  front: What force does weight decay add?
+  answer: A weight-proportional pull toward zero
+  tags: [alexnet, optimization]
+
+- id: convolution-output-maps
+  deck: main
+  format: basic
+  front: What sets a convolutional layer's number of output feature maps?
+  answer: Number of filters
+  tags: [alexnet, convolution]

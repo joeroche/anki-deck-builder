@@ -1,0 +1,12 @@
+project_id: example
+title: Example Atomic Recall Deck
+cards_file: cards.yaml
+decks:
+  - key: main
+    path: Example::Atomic Recall
+    output: example-atomic-recall.apkg
+    expected_count: 3
+installation:
+  backup_before_changes: true
+  match_legacy_by_front_answer: false
+  remove_obsolete_decks: []

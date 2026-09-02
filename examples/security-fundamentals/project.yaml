@@ -1,0 +1,12 @@
+project_id: security-fundamentals
+title: Security Fundamentals
+cards_file: cards.yaml
+decks:
+  - key: main
+    path: Examples::Security Fundamentals
+    output: security-fundamentals.apkg
+    expected_count: 10
+installation:
+  backup_before_changes: true
+  match_legacy_by_front_answer: false
+  remove_obsolete_decks: []

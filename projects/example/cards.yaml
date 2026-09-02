@@ -1,0 +1,20 @@
+- id: tcp-transport
+  deck: main
+  format: basic
+  front: Which transport protocol provides ordered delivery?
+  answer: TCP
+  tags: [example, networking]
+
+- id: gravitational-acceleration
+  deck: main
+  format: typed
+  front: Approximate gravitational acceleration near Earth's surface, in m/s^2?
+  answer: "9.81"
+  tags: [example, physics]
+
+- id: immutable-sequence
+  deck: main
+  format: basic
+  front: Which built-in Python sequence type is immutable?
+  answer: tuple
+  tags: [example, python]

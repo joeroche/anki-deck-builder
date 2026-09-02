@@ -1,0 +1,69 @@
+- id: md5-hex-length
+  deck: main
+  format: typed
+  front: How many hexadecimal characters are in an MD5 digest?
+  answer: "32"
+  tags: [security, hashes]
+
+- id: sha1-hex-length
+  deck: main
+  format: typed
+  front: How many hexadecimal characters are in a SHA-1 digest?
+  answer: "40"
+  tags: [security, hashes]
+
+- id: sha256-hex-length
+  deck: main
+  format: typed
+  front: How many hexadecimal characters are in a SHA-256 digest?
+  answer: "64"
+  tags: [security, hashes]
+
+- id: sha512-hex-length
+  deck: main
+  format: typed
+  front: How many hexadecimal characters are in a SHA-512 digest?
+  answer: "128"
+  tags: [security, hashes]
+
+- id: png-signature
+  deck: main
+  format: typed
+  front: What is the four-byte PNG hexadecimal signature?
+  answer: 89 50 4E 47
+  tags: [security, file-signatures]
+
+- id: jpeg-signature
+  deck: main
+  format: typed
+  front: What is the three-byte JPEG hexadecimal signature?
+  answer: FF D8 FF
+  tags: [security, file-signatures]
+
+- id: gzip-signature
+  deck: main
+  format: typed
+  front: What is the two-byte GZIP hexadecimal signature?
+  answer: 1F 8B
+  tags: [security, file-signatures]
+
+- id: aes128-key-bytes
+  deck: main
+  format: typed
+  front: How many bytes are in an AES-128 key?
+  answer: "16"
+  tags: [security, cryptography]
+
+- id: aes256-key-bytes
+  deck: main
+  format: typed
+  front: How many bytes are in an AES-256 key?
+  answer: "32"
+  tags: [security, cryptography]
+
+- id: xor-self-inverse
+  deck: main
+  format: basic
+  front: Applying the same XOR key twice returns what value?
+  answer: Original value
+  tags: [security, cryptography]
