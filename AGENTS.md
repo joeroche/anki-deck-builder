@@ -6,20 +6,21 @@ Read `README.md`, `rules/CARD_DESIGN_ADDENDUM.md`, `rules/VALIDATION.md`, and
 ## Non-negotiable workflow
 
 1. Preserve the original card rules in `README.md` verbatim.
-2. Put new work in a manifest-backed project under `projects/`.
-3. Run `validate`, then `review`, and show the complete plain-text review to the user.
-4. Never approve a deck on the user's behalf. Wait for explicit approval of the exact review hash.
-5. After explicit approval, run `approve`, then `build`. Run `plan` before any requested installation.
-6. Never infer a deck hierarchy from tags, filenames, or subject wording.
-7. Never claim installation success from package creation or an import dialog.
-8. Never write directly to Anki SQLite tables.
-9. Never open a collection through Anki's API while Anki has it locked.
-10. Back up and hash the collection before an installation mutates it.
-11. Move existing notes by stable GUID; use the guarded legacy matcher only for
+2. Confirm that the user supplied the relevant learning material, required rigor, and required depth. Ask for missing context before drafting cards.
+3. Put new work in a manifest-backed project under `projects/`.
+4. Run `validate`, then `review`, and show the complete plain-text review to the user.
+5. Never approve a deck on the user's behalf. Wait for explicit approval of the exact review hash.
+6. After explicit approval, run `approve`, then `build`. Run `plan` before any requested installation.
+7. Never infer a deck hierarchy from tags, filenames, or subject wording.
+8. Never claim installation success from package creation or an import dialog.
+9. Never write directly to Anki SQLite tables.
+10. Never open a collection through Anki's API while Anki has it locked.
+11. Back up and hash the collection before an installation mutates it.
+12. Move existing notes by stable GUID; use the guarded legacy matcher only for
    a declared migration.
-12. Remove an obsolete deck only after verifying it contains zero cards.
-13. Fail closed on count, hierarchy, GUID, media, validation, or approval mismatches.
-14. Verify the live collection after every install.
+13. Remove an obsolete deck only after verifying it contains zero cards.
+14. Fail closed on count, hierarchy, GUID, media, validation, or approval mismatches.
+15. Verify the live collection after every install.
 
 ## Example priority
 

@@ -18,19 +18,33 @@ Paste this repository link into your coding agent of choice:
 https://github.com/joeroche/anki-deck-builder
 ```
 
-Then give it your notes and say:
+Then paste or attach all relevant course and learning material. Include the
+syllabus, learning objectives, lecture notes, textbook sections, study guides,
+practice questions, and instructor guidance that should shape the deck. State
+the required rigor and depth, such as high school, introductory university,
+upper-level university, certification exam, or professional practice.
+
+Give the agent this prompt with your material:
 
 ```text
 Use this repository to make an Anki deck from my notes. Follow every instruction
-and rule in the repository. Show me the complete proposed deck as plain text
-first. Do not build the Anki file until I explicitly approve it. After I
-approve it, put the finished .apkg file on my Desktop.
+and rule in the repository. Use all relevant course and learning information I
+provide. The required rigor is [LEVEL]. The required depth is [DESCRIBE WHAT I
+MUST BE ABLE TO RECALL OR DO]. Ask me for missing context if the source material,
+rigor, or depth is unclear. Show me the complete proposed deck as plain text
+first. Do not build the Anki file until I explicitly approve it. After I approve
+it, put the finished .apkg file on my Desktop.
 ```
 
 The agent should clone the repository, read its instructions, create and
 validate the cards, and show you every proposed front and back as plain text.
 You can approve the deck or request changes. Only after explicit approval does
 the agent build the `.apkg` file on your Desktop.
+
+Rigor tells the agent how exact and advanced the cards should be. Depth tells it
+which distinctions, mechanisms, formulas, procedures, or exceptions you must
+retrieve. If you do not provide both, the agent should clarify them before it
+drafts the deck.
 
 ## Why it works better
 
