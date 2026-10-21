@@ -48,6 +48,7 @@ class Card:
     raw: dict[str, Any]
     project_id: str
     project_dir: Path
+    include_project_tag: bool = True
 
     @property
     def guid(self) -> str:
@@ -71,7 +72,8 @@ class Card:
     @property
     def tags(self) -> list[str]:
         tags = [str(tag).strip() for tag in self.raw.get("tags", []) if str(tag).strip()]
-        tags.append(f"anki_builder::{self.project_id}")
+        if self.include_project_tag:
+            tags.append(f"anki_builder::{self.project_id}")
         return sorted(set(tags))
 
     @property
@@ -96,6 +98,7 @@ class Project:
     cards: list[Card]
     profile_path: Path | None = None
     installation: dict[str, Any] = field(default_factory=dict)
+    include_project_tag: bool = True
 
     @property
     def directory(self) -> Path:
@@ -121,6 +124,7 @@ def load_project(path: str | Path) -> Project:
 
     project_id = str(data.get("project_id", "")).strip()
     title = str(data.get("title", "")).strip()
+    include_project_tag = bool(data.get("include_project_tag", True))
     cards_value = str(data.get("cards_file", "")).strip()
     cards_file = (manifest_path.parent / cards_value).resolve()
 
@@ -151,6 +155,7 @@ def load_project(path: str | Path) -> Project:
                 raw=item,
                 project_id=project_id,
                 project_dir=manifest_path.parent,
+                include_project_tag=include_project_tag,
             )
         )
 
@@ -165,4 +170,5 @@ def load_project(path: str | Path) -> Project:
         cards=cards,
         profile_path=profile_path,
         installation=dict(data.get("installation") or {}),
+        include_project_tag=include_project_tag,
     )

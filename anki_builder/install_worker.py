@@ -4,6 +4,7 @@ from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
 import hashlib
+import html
 import json
 import shutil
 import sys
@@ -182,7 +183,11 @@ def install(payload_path: Path) -> dict:
                 if not required.issubset(keys):
                     raise RuntimeError(f"{card['id']} has an incompatible Image Occlusion note type")
                 mask = data["mask"]
-                note["Header"] = card["front"]
+                media_name = Path(data["image"]).name
+                note["Header"] = (
+                    card["front"] + '<span hidden><img src="'
+                    + html.escape(media_name, quote=True) + '"></span>'
+                )
                 note["Image"] = Path(data["image"]).name
                 note["Mask"] = ";".join([
                     f"left:{float(mask['x']):g}%",
@@ -195,9 +200,10 @@ def install(payload_path: Path) -> dict:
                 note["CardID"] = card["id"]
             if "ProjectID" in keys:
                 note["ProjectID"] = payload["project_id"]
-            project_tag = f"anki_builder::{payload['project_id']}"
-            if project_tag not in note.tags:
-                note.tags.append(project_tag)
+            if payload.get("include_project_tag", True):
+                project_tag = f"anki_builder::{payload['project_id']}"
+                if project_tag not in note.tags:
+                    note.tags.append(project_tag)
             col.update_note(note)
             updated.append(card["id"])
             deck_id = col.decks.id(card["deck_path"])

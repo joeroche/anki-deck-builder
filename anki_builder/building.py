@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import Counter
 from pathlib import Path
 import hashlib
+import html
 import json
 import sqlite3
 import tempfile
@@ -110,7 +111,13 @@ def _note(card: Card, models: dict[str, genanki.Model]) -> genanki.Note:
         fields = [str(card.raw["text"]), card.id, card.project_id]
     else:
         assert card.media_path
-        fields = [card.prompt, card.media_path.name, _mask_style(card), card.answer, card.id, card.project_id]
+        # Anki discovers package media from note HTML, not bare filename fields.
+        media_reference = (
+            '<span hidden><img src="'
+            + html.escape(card.media_path.name, quote=True)
+            + '"></span>'
+        )
+        fields = [card.prompt + media_reference, card.media_path.name, _mask_style(card), card.answer, card.id, card.project_id]
     return genanki.Note(
         model=models[card.format],
         fields=fields,

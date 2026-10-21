@@ -8,6 +8,7 @@
     "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
     "title": {"type": "string", "minLength": 1},
     "cards_file": {"type": "string", "minLength": 1},
+    "include_project_tag": {"type": "boolean"},
     "profile_path": {"type": "string"},
     "decks": {
       "type": "array",

@@ -13,3 +13,7 @@ projects/*/outputs/
 examples/*/outputs/
 examples/user/
 projects/*/project.local.yaml
+
+# User/course decks are private and must not be published to public repo
+projects/*
+!projects/example/

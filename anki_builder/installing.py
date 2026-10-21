@@ -31,6 +31,7 @@ def install_project(
         raise FileNotFoundError(f"Anki Python runtime not found: {anki_python}")
     payload = {
         "project_id": project.project_id,
+        "include_project_tag": project.include_project_tag,
         "collection_path": str(collection_path),
         "output_dir": str(output_dir),
         "packages": build_report["packages"],

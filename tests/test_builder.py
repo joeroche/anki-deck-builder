@@ -142,6 +142,19 @@ def test_stable_guid_is_wording_independent():
     assert stable_guid("project", "card") != stable_guid("project", "other-card")
 
 
+def test_project_tag_can_be_omitted(tmp_path):
+    project = make_project(tmp_path)
+    assert "anki_builder::test-project" in project.cards[0].tags
+
+    manifest_path = tmp_path / "project.yaml"
+    manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+    manifest["include_project_tag"] = False
+    manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False), encoding="utf-8")
+
+    project = load_project(tmp_path)
+    assert project.cards[0].tags == []
+
+
 def test_install_is_idempotent(tmp_path):
     if not DEFAULT_ANKI_PYTHON.is_file():
         return
