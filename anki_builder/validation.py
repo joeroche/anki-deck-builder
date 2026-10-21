@@ -60,6 +60,13 @@ def _issue(issues: list[Issue], severity: str, code: str, message: str, card: Ca
     issues.append(Issue(severity, code, message, card.id if card else None))
 
 
+def strip_markup(text: str) -> str:
+    text = re.sub(r"\\\(.*?\\\)|\\\[.*?\\\]|\$.*?\$", " ", text)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = re.sub(r"&[a-zA-Z0-9#]+;", " ", text)
+    return " ".join(text.split())
+
+
 def _validate_card(card: Card, issues: list[Issue]) -> None:
     if not ID_RE.fullmatch(card.id):
         _issue(issues, "error", "invalid_card_id", f"Invalid card id: {card.id!r}", card)
@@ -70,9 +77,13 @@ def _validate_card(card: Card, issues: list[Issue]) -> None:
         _issue(issues, "error", "empty_prompt", "Card prompt is empty", card)
     if not card.answer:
         _issue(issues, "error", "empty_answer", "Card answer is empty", card)
-    if len(card.prompt.split()) > 30:
+    prompt_words = len(strip_markup(card.prompt).split())
+    answer_words = len(strip_markup(card.answer).split())
+    if prompt_words > 30:
         _issue(issues, "warning", "long_prompt", "Prompt exceeds 30 words", card)
-    if len(card.answer.split()) > 12:
+    if answer_words > 5 and not card.allow_wordy_answer:
+        _issue(issues, "warning", "wordy_answer", f"Answer exceeds soft threshold of 5 words ({answer_words} words)", card)
+    if answer_words > 12:
         _issue(issues, "warning", "long_answer", "Answer exceeds 12 words", card)
     if re.search(r"\b(and|also)\b|;|\n", card.answer, re.I):
         _issue(issues, "warning", "possible_multi_datum", "Answer may contain multiple datums", card)
@@ -86,6 +97,12 @@ def _validate_card(card: Card, issues: list[Issue]) -> None:
             _issue(issues, "error", "cloze_number", "Single cloze deletion must use c1", card)
         if re.search(r"\{\{c\d+::.*?::.+?\}\}", text):
             _issue(issues, "error", "cloze_hint", "Cloze hints can leak the answer and are prohibited", card)
+        if m := re.search(r"\b(a|an)\s+\{\{c\d+::([^:}]+)", text, re.I):
+            article = m.group(1).lower()
+            target_word = m.group(2).strip().split()[0] if m.group(2).strip() else ""
+            starts_vowel = bool(re.match(r"^[aeiou]", target_word, re.I))
+            if (article == "a" and starts_vowel) or (article == "an" and not starts_vowel):
+                _issue(issues, "warning", "cloze_article_leakage", f"Indefinite article '{article}' may leak or mismatch cloze target '{target_word}'", card)
 
     if card.format == "typed" and len(card.answer) > 40:
         _issue(issues, "error", "typed_answer_too_long", "Typed answer exceeds 40 characters", card)
@@ -93,6 +110,8 @@ def _validate_card(card: Card, issues: list[Issue]) -> None:
     if card.format == "image_occlusion":
         if card.media_path is None or not card.media_path.is_file():
             _issue(issues, "error", "missing_image", "Image Occlusion source image is missing", card)
+        elif card.media_path.stat().st_size == 0:
+            _issue(issues, "error", "empty_image", "Image Occlusion source image is empty", card)
         mask = card.raw.get("mask")
         if not isinstance(mask, dict):
             _issue(issues, "error", "missing_mask", "Image Occlusion requires one mask object", card)
@@ -176,10 +195,10 @@ def validate_project(project: Project) -> ValidationReport:
             _issue(issues, "error", "deck_count", f"{deck.key}: expected {deck.expected_count}, found {actual}")
 
     for set_id, cards in contrast_sets.items():
-        roles = {str(card.raw.get("contrast_role", "")).strip() for card in cards}
-        if len(cards) < 2 or len(roles - {""}) < 2:
-            _issue(issues, "error", "unbalanced_contrast", f"Contrast set {set_id} lacks opposing roles")
-        lengths = [max(1, len(card.prompt.split())) for card in cards]
+        roles = [str(card.raw.get("contrast_role", "")).strip() for card in cards]
+        if len(cards) < 2 or any(not r for r in roles) or len(set(roles)) < 2:
+            _issue(issues, "error", "unbalanced_contrast", f"Contrast set {set_id} lacks unique opposing roles")
+        lengths = [max(1, len(strip_markup(card.prompt).split())) for card in cards]
         if max(lengths) / min(lengths) > 1.6:
             _issue(issues, "warning", "contrast_asymmetry", f"Contrast set {set_id} has asymmetric prompt lengths")
         if len(cards) == 2:
@@ -189,6 +208,9 @@ def validate_project(project: Project) -> ValidationReport:
 
     for set_id, cards in reinforcement_sets.items():
         answers = {normalize_text(card.answer) for card in cards}
+        target_ids = {card.memory_target_id for card in cards}
+        if len(target_ids) > 1:
+            _issue(issues, "error", "inconsistent_reinforcement_target", f"Reinforcement set {set_id} has inconsistent memory_target_ids: {sorted(target_ids)}")
         if len(cards) not in {2, 3}:
             _issue(issues, "error", "reinforcement_size", f"Reinforcement set {set_id} must contain 2 or 3 cards")
         if len(answers) != 1:

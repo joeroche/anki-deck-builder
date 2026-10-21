@@ -87,6 +87,20 @@ class Card:
         value = str(self.raw.get("image", "")).strip()
         return (self.project_dir / value).resolve() if value else None
 
+    @property
+    def context(self) -> str | None:
+        val = str(self.raw.get("context", "")).strip()
+        return val if val else None
+
+    @property
+    def stage(self) -> str | None:
+        val = str(self.raw.get("stage", "")).strip()
+        return val if val else None
+
+    @property
+    def allow_wordy_answer(self) -> bool:
+        return bool(self.raw.get("allow_wordy_answer", False))
+
 
 @dataclass
 class Project:
@@ -99,6 +113,10 @@ class Project:
     profile_path: Path | None = None
     installation: dict[str, Any] = field(default_factory=dict)
     include_project_tag: bool = True
+    learner_known_topics: list[str] = field(default_factory=list)
+    learner_weak_topics: list[str] = field(default_factory=list)
+    supplied_reference_material: list[str] = field(default_factory=list)
+    study_budget_minutes: int | None = None
 
     @property
     def directory(self) -> Path:
@@ -159,6 +177,12 @@ def load_project(path: str | Path) -> Project:
             )
         )
 
+    learner_known_topics = [str(x).strip() for x in data.get("learner_known_topics") or [] if str(x).strip()]
+    learner_weak_topics = [str(x).strip() for x in data.get("learner_weak_topics") or [] if str(x).strip()]
+    supplied_reference_material = [str(x).strip() for x in data.get("supplied_reference_material") or [] if str(x).strip()]
+    budget_raw = data.get("study_budget_minutes")
+    study_budget_minutes = int(budget_raw) if budget_raw is not None else None
+
     profile_value = str(data.get("profile_path", "")).strip()
     profile_path = Path(profile_value).expanduser().resolve() if profile_value else None
     return Project(
@@ -171,4 +195,8 @@ def load_project(path: str | Path) -> Project:
         profile_path=profile_path,
         installation=dict(data.get("installation") or {}),
         include_project_tag=include_project_tag,
+        learner_known_topics=learner_known_topics,
+        learner_weak_topics=learner_weak_topics,
+        supplied_reference_material=supplied_reference_material,
+        study_budget_minutes=study_budget_minutes,
     )

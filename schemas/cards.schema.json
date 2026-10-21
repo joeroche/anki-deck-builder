@@ -32,7 +32,10 @@
       "contrast_role": {"type": "string", "minLength": 1},
       "reinforcement_set_id": {"type": "string", "minLength": 1},
       "bidirectional_set_id": {"type": "string", "minLength": 1},
-      "direction": {"enum": ["forward", "reverse"]}
+      "direction": {"enum": ["forward", "reverse"]},
+      "context": {"type": "string"},
+      "stage": {"type": "string"},
+      "allow_wordy_answer": {"type": "boolean"}
     },
     "allOf": [
       {

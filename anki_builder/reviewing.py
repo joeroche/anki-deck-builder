@@ -5,7 +5,9 @@ from pathlib import Path
 import hashlib
 import json
 
-from .models import Project
+from collections import Counter
+
+from .models import CLOZE_RE, Project
 
 
 APPROVAL_FILE = "review-approval.json"
@@ -35,8 +37,22 @@ def render_review(project: Project) -> str:
         f"Project: {project.project_id}",
         f"Cards: {len(project.cards)}",
         f"Review hash: {fingerprint}",
-        "",
     ]
+    if project.study_budget_minutes:
+        lines.append(f"Study budget: {project.study_budget_minutes} minutes/day")
+    if project.learner_weak_topics:
+        lines.append(f"Priority / Weak topics: {', '.join(project.learner_weak_topics)}")
+    if project.learner_known_topics:
+        lines.append(f"Mastered prerequisites (omitted): {', '.join(project.learner_known_topics)}")
+
+    contexts = Counter(card.context for card in project.cards if card.context)
+    if contexts:
+        lines.append(f"Context breakdown: {dict(contexts)}")
+    stages = Counter(card.stage for card in project.cards if card.stage)
+    if stages:
+        lines.append(f"Stage breakdown: {dict(stages)}")
+
+    lines.append("")
     for index, card in enumerate(project.cards, start=1):
         deck_path = project.deck_map[card.deck].path
         lines.extend(
@@ -44,10 +60,21 @@ def render_review(project: Project) -> str:
                 f"Card {index}",
                 f"Deck: {deck_path}",
                 f"Format: {card.format}",
-                f"Front: {card.prompt}",
-                f"Back: {card.answer}",
             ]
         )
+        if card.context:
+            lines.append(f"Context: {card.context}")
+        if card.stage:
+            lines.append(f"Stage: {card.stage}")
+        if card.format == "cloze":
+            cue = CLOZE_RE.sub("[...]", card.prompt)
+            lines.append(f"Front: {cue}")
+            lines.append(f"Revealed: {card.prompt}")
+            lines.append(f"Back: {card.answer}")
+        else:
+            lines.append(f"Front: {card.prompt}")
+            lines.append(f"Back: {card.answer}")
+
         if card.tags:
             lines.append(f"Tags: {', '.join(card.tags)}")
         lines.append("")

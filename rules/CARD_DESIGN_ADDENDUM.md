@@ -81,7 +81,7 @@ and validate each direction explicitly; never automatically reverse every card.
 
 - Recognition-only multiple choice
 - Long passages with an obvious missing word
-- Clozes answerable through grammar alone
+- Clozes answerable through grammar alone (including revealing `a`/`an` articles)
 - Multiple unrelated blanks
 - Unnecessary automatic reversals
 - Images with multiple targets hidden together
@@ -89,7 +89,13 @@ and validate each direction explicitly; never automatically reverse every card.
 - Multi-step calculations, novel problem solving, explanatory answers, or essays
 - Format variety added only for appearance
 
-## 10. Research basis
+## 10. Knowledge calibration, answer burden, and study contexts
+
+- **Calibrate Knowledge Worth Carding:** Distinguish demonstrated weaknesses, important untested knowledge, already-mastered prerequisites, and reference material provided during tests. Prioritize useful retrieval targets. Do not fill a chapter quota with elementary facts the learner already knows. Record deliberate omissions.
+- **Short Answer Burden (Soft 5-Word Threshold):** Prefer one short recalled datum (typically $\le 5$ words). When the natural answer becomes a sentence, first try moving defining conditions into the prompt cue and retrieving the term. Use cloze when context is necessary. Preserve meaning and scientific rigor without creating essay answers.
+- **Declare Study Context Early:** Route cards by what answering requires: mental recall (`phone`), handwriting (`pen_and_paper`), or a full screen (`desktop`). Settle the approved hierarchy explicitly by modality so mobile sessions aren't derailed by cards needing scratch paper.
+
+## 11. Research basis
 
 The addendum operationalizes retrieval practice, repeated spaced retrieval,
 generation, variable retrieval cues, and interleaving. Cloze and Image

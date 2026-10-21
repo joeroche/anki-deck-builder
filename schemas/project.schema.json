@@ -10,6 +10,19 @@
     "cards_file": {"type": "string", "minLength": 1},
     "include_project_tag": {"type": "boolean"},
     "profile_path": {"type": "string"},
+    "learner_known_topics": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "learner_weak_topics": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "supplied_reference_material": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "study_budget_minutes": {"type": "integer", "minimum": 1},
     "decks": {
       "type": "array",
       "minItems": 1,
