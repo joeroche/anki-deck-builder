@@ -32,3 +32,17 @@ of their own. Never commit `examples/user/`; it may contain private material.
 Card-design philosophy changes require explicit user approval. Mechanical,
 validation, safety, installation, and directory improvements may proceed when
 the user has authorized implementation.
+
+## macOS computer use and native Anki crashes
+
+If inspecting Anki crashes its native process, read `rules/MACOS_COMPUTER_USE.md`
+before another launch. Match the actual crash log and runtime; do not blame card
+content without evidence or repeat foreground relaunches. Keep native apps hidden
+when the user asks to work in the background.
+
+For the documented Qt Cocoa selected-child ownership defect, the source-built,
+version-and-hash-pinned helper is `tools/macos_qt_guard/manage.py`. Follow its
+inspect/install/status/regression/rollback sequence. Unknown runtimes fail closed;
+do not loosen the pin, disable accessibility globally, or call a restart a root
+fix. Preserve collections, review history, and active sessions. Verify real selected
+children and table-ID survival without grading cards; record tested limits honestly.
