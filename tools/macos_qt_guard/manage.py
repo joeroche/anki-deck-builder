@@ -95,9 +95,22 @@ def rollback(base):
     shutil.move(str(source), destination)
     return dict(status='disabled_for_next_launch', backup=str(destination), restart_required=True)
 
+def regression(python):
+    """Compile both native libraries and test synthetic data without activation."""
+    validate_runtime(runtime_info(python))
+    build()
+    subprocess.run(['xcrun', 'clang', '-dynamiclib', '-fno-objc-arc', '-arch', 'arm64',
+                    '-mmacosx-version-min=12.0', '-framework', 'Foundation',
+                    '-o', str(ROOT / 'native_probe.dylib'), str(ROOT / 'native_probe.m')], check=True)
+    result = json.loads(subprocess.check_output(
+        [str(python), str(ROOT / 'native_regression.py'), '--patched', '--background'], text=True))
+    if result.get('patched') is not True or len(result.get('checks', [])) != 15:
+        raise RuntimeError('Missing complete patched regression evidence.')
+    return result
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=['inspect', 'build', 'install', 'status', 'rollback'])
+    parser.add_argument('action', choices=['inspect', 'build', 'install', 'status', 'rollback', 'regression'])
     parser.add_argument('--anki-base', type=Path, default=Path.home() / 'Library/Application Support/Anki2')
     parser.add_argument('--anki-python', type=Path, default=Path.home() / 'Library/Application Support/AnkiProgramFiles/.venv/bin/python')
     args = parser.parse_args()
@@ -115,6 +128,8 @@ def main():
         result = install(args.anki_base, args.anki_python)
     elif args.action == 'rollback':
         result = rollback(args.anki_base)
+    elif args.action == 'regression':
+        result = regression(args.anki_python)
     else:
         path = args.anki_base / 'addons21' / PACKAGE / 'user_files/status.json'
         result = json.loads(path.read_text()) if path.exists() else dict(status='no_runtime_receipt')

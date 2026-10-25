@@ -47,7 +47,13 @@ Require runtime status `installed`, not merely an installer exit code. The runti
 
 Prefer background checks. Obtain approval through normal task context before bringing windows forward; respect an explicit request to keep them hidden. Do not answer or grade the user's cards to test the fix.
 
-The included native regression test creates a synthetic table, with no Anki profile or collection access. Build its probe first:
+The included native regression test creates a synthetic table, with no Anki profile or collection access. One command validates the runtime pin, compiles both libraries from source, and runs all 15 cases in the background. Anki may remain open:
+
+```sh
+python3 tools/macos_qt_guard/manage.py regression
+```
+
+For manual investigation, build the guard (`manage.py build`) and probe first:
 
 ```sh
 xcrun clang -dynamiclib -fno-objc-arc -framework Foundation \
@@ -62,6 +68,8 @@ xcrun clang -dynamiclib -fno-objc-arc -framework Foundation \
 Also verify actual Anki Browse when non-disruptive: one selected row, repeated accessibility scans, fullscreen/windowed transitions, selection changes, and closing/reopening Browse. Confirm selected children remain exposed, check for newly timestamped crash reports, and distinguish ScreenCaptureKit capture failures from target-process crashes. Do not claim every scenario passed if it was not exercised. The local integration evidence included ten repeated Browse hierarchy scans, selected-card content, a fullscreen screenshot, and no new Anki crash after the guard. Broader accessibility behavior, spoken VoiceOver, long-term leak freedom, and every possible teardown path remain unverified.
 
 Local card setup also rendered all 20 selected cards and 47 formula spans in a hidden Anki webview without changing review history. That is card-render evidence, separate from the ownership regression test.
+
+For future deck setup, prefer the ordinary Anki reviewer unless the user asks for a custom study interface. A custom dialog inside Anki is not the standard reviewer; label it clearly. Verify both the requested deck and its first question through normal Anki, without answering it. Hidden MathJax rendering can check all selected formulas without bringing Browse forward. These checks do not require accessibility inspection. A card-count or render pass does not establish completion of a study session.
 
 ## Roll back and upgrades
 

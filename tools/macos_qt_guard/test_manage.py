@@ -52,5 +52,11 @@ class GuardInstallerTests(unittest.TestCase):
                 manage.rollback(base)
             self.assertTrue(target.exists())
 
+    def test_regression_refuses_unknown_runtime_before_building(self):
+        with patch.object(manage, 'runtime_info', return_value={}), patch.object(manage, 'build') as build:
+            with self.assertRaises(RuntimeError):
+                manage.regression(Path('/unused'))
+            build.assert_not_called()
+
 if __name__ == '__main__':
     unittest.main()
